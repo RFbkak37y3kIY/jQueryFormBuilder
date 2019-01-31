@@ -186,6 +186,8 @@ export default class Helpers {
     const d = this.d
     const _this = this
 
+    console.log('form', form);
+    // debugger;
     if (form.childNodes.length !== 0) {
       // build data object
       forEach(form.childNodes, function(index, field) {
@@ -230,7 +232,10 @@ export default class Helpers {
 
           fieldData = trimObj(fieldData)
 
-          const multipleField = fieldData.type && fieldData.type.match(d.optionFieldsRegEx)
+          // console.log('d', d);
+
+          const multipleField = fieldData.type && 
+              fieldData.type.match(d && d.optionFieldsRegEx? d.optionFieldsRegEx: /(select|checkbox-group|checkbox|radio-group|autocomplete)/)
 
           if (multipleField) {
             fieldData.values = _this.fieldOptionData($field)
@@ -358,7 +363,7 @@ export default class Helpers {
       previewData.style = style
     }
 
-    if (fieldType.match(d.optionFieldsRegEx)) {
+    if (fieldType.match(d && d.optionFieldsRegEx? d.optionFieldsRegEx: /(select|checkbox-group|checkbox|radio-group|autocomplete)/)) {
       previewData.values = []
       previewData.multiple = $('[name="multiple"]', field).is(':checked')
 
@@ -1103,14 +1108,17 @@ export default class Helpers {
    * Gets the data for current instance of formBuilder
    * @param  {String} type
    * @param  {Boolean} formatted
+   * @param  {Object} _stage
    * @return {Array|String} formData
    */
-  getFormData(type = 'js', formatted = false) {
+  getFormData(type = 'js', formatted = false, _stage = null) {
+    
     const h = this
+    console.log('h.d.stage', _stage || h.d.stage)
     const data = {
-      js: () => h.prepData(h.d.stage),
-      xml: () => h.xmlSave(h.d.stage),
-      json: formatted => window.JSON.stringify(h.prepData(h.d.stage), null, formatted && '  '),
+      js: () => h.prepData(_stage || h.d.stage),
+      xml: () => h.xmlSave(_stage || h.d.stage),
+      json: formatted => window.JSON.stringify(h.prepData(_stage || h.d.stage), null, formatted && '  '),
     }
 
     return data[type](formatted)

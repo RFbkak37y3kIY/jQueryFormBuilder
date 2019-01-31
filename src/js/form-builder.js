@@ -42,6 +42,8 @@ const FormBuilder = function(opts, element) {
   }
   const layoutEngine = new opts.layout(opts.layoutTemplates, true)
 
+  console.log('opts',opts,opts.layoutTemplates)
+
   const h = new Helpers(formID, layoutEngine, formBuilder)
   const m = markup
   opts = h.processOptions(opts)
