@@ -10,6 +10,7 @@ import controlTextarea from './textarea';
 import controlTinymce from './textarea.tinymce';
 import controlQuill from './textarea.quill';
 import controlPage from './page';
+import controlInlineGroup from './inlineGroup';
 
 
 export default {
@@ -24,6 +25,7 @@ export default {
   controlTextarea,
   controlTinymce,
   controlQuill,
-  controlPage
+  controlPage,
+  controlInlineGroup
 };
 

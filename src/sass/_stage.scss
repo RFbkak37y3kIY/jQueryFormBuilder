@@ -62,7 +62,9 @@
     margin-bottom: 3px;
     background-color: $white;
     transition: background-color 250ms ease-in-out, margin-top 400ms;
-
+    flex: 1;
+    margin: 0.1rem;
+    
     &.hidden-field {
       background-color: $hidden-field-bgcolor;
     }
