@@ -6,3 +6,8 @@ dist/
 site
 .DS_Store
 yarn-error.log
+/.vs/FormBuilder/v15/.suo
+/.vs/VSWorkspaceState.json
+/.vs/config/applicationhost.config
+/.vs/jQueryFormBuilder/v15/.suo
+/.vs

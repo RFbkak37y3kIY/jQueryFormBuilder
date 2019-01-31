@@ -1,0 +1,147 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "formBuilder", "formBuilder", "{8A09C928-7A7F-49C2-A9B5-457FFEBA3A83}"
+	ProjectSection(SolutionItems) = preProject
+		.codeclimate.yml = .codeclimate.yml
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		bower.json = bower.json
+		build.bat = build.bat
+		CHANGELOG.md = CHANGELOG.md
+		composer.json = composer.json
+		CONTRIBUTING.md = CONTRIBUTING.md
+		index.html = index.html
+		ISSUE_TEMPLATE.md = ISSUE_TEMPLATE.md
+		LICENSE = LICENSE
+		mkdocs.yml = mkdocs.yml
+		package-lock.json = package-lock.json
+		package.json = package.json
+		README.md = README.md
+		run.bat = run.bat
+		yarn.lock = yarn.lock
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{34ED509D-CCC3-4D62-B954-A53B34EF417A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{6EBC32FD-E3C0-49D3-85C9-2385DF4D2D95}"
+	ProjectSection(SolutionItems) = preProject
+		src\demo\index.html = src\demo\index.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{E1F61A5F-C437-42C5-9F4A-81116ABD4ECC}"
+	ProjectSection(SolutionItems) = preProject
+		src\demo\js\actionButtons.js = src\demo\js\actionButtons.js
+		src\demo\js\demo.js = src\demo\js\demo.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sass", "sass", "{4424439A-003B-4EB4-811E-09A54064F47A}"
+	ProjectSection(SolutionItems) = preProject
+		src\demo\sass\demo.scss = src\demo\sass\demo.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fonts", "fonts", "{97D240E7-933E-43A7-8308-353AA2EE0722}"
+	ProjectSection(SolutionItems) = preProject
+		src\fonts\config.json = src\fonts\config.json
+		src\fonts\fb-icons-embedded.css = src\fonts\fb-icons-embedded.css
+		src\fonts\fb-icons.woff = src\fonts\fb-icons.woff
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{CCFA8EE7-E3C7-466C-879B-563A479C1357}"
+	ProjectSection(SolutionItems) = preProject
+		src\js\config.js = src\js\config.js
+		src\js\control.js = src\js\control.js
+		src\js\controls.js = src\js\controls.js
+		src\js\data.js = src\js\data.js
+		src\js\dom.js = src\js\dom.js
+		src\js\events.js = src\js\events.js
+		src\js\form-builder.js = src\js\form-builder.js
+		src\js\form-render.js = src\js\form-render.js
+		src\js\helpers.js = src\js\helpers.js
+		src\js\layout.js = src\js\layout.js
+		src\js\README.md = src\js\README.md
+		src\js\utils.js = src\js\utils.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "control", "control", "{C3410121-27BB-4DFA-BFF9-849064286D56}"
+	ProjectSection(SolutionItems) = preProject
+		src\js\control\autocomplete.js = src\js\control\autocomplete.js
+		src\js\control\button.js = src\js\control\button.js
+		src\js\control\custom.js = src\js\control\custom.js
+		src\js\control\file.fineuploader.js = src\js\control\file.fineuploader.js
+		src\js\control\hidden.js = src\js\control\hidden.js
+		src\js\control\index.js = src\js\control\index.js
+		src\js\control\paragraph.js = src\js\control\paragraph.js
+		src\js\control\README.md = src\js\control\README.md
+		src\js\control\select.js = src\js\control\select.js
+		src\js\control\text.js = src\js\control\text.js
+		src\js\control\textarea.js = src\js\control\textarea.js
+		src\js\control\textarea.quill.js = src\js\control\textarea.quill.js
+		src\js\control\textarea.tinymce.js = src\js\control\textarea.tinymce.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "control_plugins", "control_plugins", "{FC4D0DEA-0141-42DB-8E67-17F0309C406F}"
+	ProjectSection(SolutionItems) = preProject
+		src\js\control_plugins\README.md = src\js\control_plugins\README.md
+		src\js\control_plugins\starRating.js = src\js\control_plugins\starRating.js
+		src\js\control_plugins\textarea.trumbowyg.js = src\js\control_plugins\textarea.trumbowyg.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sass", "sass", "{F954F70D-78E2-4281-A7D5-5AE84D3DCEB7}"
+	ProjectSection(SolutionItems) = preProject
+		src\sass\_controls.scss = src\sass\_controls.scss
+		src\sass\_kc-toggle.scss = src\sass\_kc-toggle.scss
+		src\sass\_stage.scss = src\sass\_stage.scss
+		src\sass\form-builder.scss = src\sass\form-builder.scss
+		src\sass\form-render.scss = src\sass\form-render.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "base", "base", "{7E6B123F-4A9C-4BF8-A61B-37D36AFC340F}"
+	ProjectSection(SolutionItems) = preProject
+		src\sass\base\_animation.scss = src\sass\base\_animation.scss
+		src\sass\base\_bs.scss = src\sass\base\_bs.scss
+		src\sass\base\_font.scss = src\sass\base\_font.scss
+		src\sass\base\_mixins.scss = src\sass\base\_mixins.scss
+		src\sass\base\_variables.scss = src\sass\base\_variables.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{0EE8B035-5EDA-4518-A9C2-AF1D81868F03}"
+	ProjectSection(SolutionItems) = preProject
+		tools\build-vendor.js = tools\build-vendor.js
+		tools\deploy.js = tools\deploy.js
+		tools\icon-font.js = tools\icon-font.js
+		tools\run.js = tools\run.js
+		tools\utils.js = tools\utils.js
+		tools\webpack.config.js = tools\webpack.config.js
+		tools\webpack.plugins.config.js = tools\webpack.plugins.config.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test-helpers", "test-helpers", "{FF870041-F385-48E9-AB6F-7296930DD074}"
+	ProjectSection(SolutionItems) = preProject
+		tools\test-helpers\document.js = tools\test-helpers\document.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34ED509D-CCC3-4D62-B954-A53B34EF417A} = {8A09C928-7A7F-49C2-A9B5-457FFEBA3A83}
+		{6EBC32FD-E3C0-49D3-85C9-2385DF4D2D95} = {34ED509D-CCC3-4D62-B954-A53B34EF417A}
+		{E1F61A5F-C437-42C5-9F4A-81116ABD4ECC} = {6EBC32FD-E3C0-49D3-85C9-2385DF4D2D95}
+		{4424439A-003B-4EB4-811E-09A54064F47A} = {6EBC32FD-E3C0-49D3-85C9-2385DF4D2D95}
+		{97D240E7-933E-43A7-8308-353AA2EE0722} = {34ED509D-CCC3-4D62-B954-A53B34EF417A}
+		{CCFA8EE7-E3C7-466C-879B-563A479C1357} = {34ED509D-CCC3-4D62-B954-A53B34EF417A}
+		{C3410121-27BB-4DFA-BFF9-849064286D56} = {CCFA8EE7-E3C7-466C-879B-563A479C1357}
+		{FC4D0DEA-0141-42DB-8E67-17F0309C406F} = {CCFA8EE7-E3C7-466C-879B-563A479C1357}
+		{F954F70D-78E2-4281-A7D5-5AE84D3DCEB7} = {34ED509D-CCC3-4D62-B954-A53B34EF417A}
+		{7E6B123F-4A9C-4BF8-A61B-37D36AFC340F} = {F954F70D-78E2-4281-A7D5-5AE84D3DCEB7}
+		{0EE8B035-5EDA-4518-A9C2-AF1D81868F03} = {8A09C928-7A7F-49C2-A9B5-457FFEBA3A83}
+		{FF870041-F385-48E9-AB6F-7296930DD074} = {0EE8B035-5EDA-4518-A9C2-AF1D81868F03}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {038FD44E-EC4E-44DB-9B48-714171D121F4}
+	EndGlobalSection
+EndGlobal
