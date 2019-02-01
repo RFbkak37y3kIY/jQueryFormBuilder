@@ -11,3 +11,4 @@ yarn-error.log
 /.vs/config/applicationhost.config
 /.vs/jQueryFormBuilder/v15/.suo
 /.vs
+package-lock.json

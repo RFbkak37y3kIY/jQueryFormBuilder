@@ -42,6 +42,8 @@ const FormBuilder = function(opts, element) {
   }
   const layoutEngine = new opts.layout(opts.layoutTemplates, true)
 
+  console.log('opts',opts,opts.layoutTemplates)
+
   const h = new Helpers(formID, layoutEngine, formBuilder)
   const m = markup
   opts = h.processOptions(opts)
@@ -70,17 +72,6 @@ const FormBuilder = function(opts, element) {
     placeholder: 'frmb-placeholder',
   })
 
-  /* 
-  window.$stage = $stage;
-  window.helperStageInstance = h;
-  window.formBuilderSortableEvents = {
-    beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
-    start: (evt, ui) => h.startMoving.call(h, evt, ui),
-    stop: (evt, ui) => h.stopMoving.call(h, evt, ui),
-  };
-  console.log('STAGE IS ', $stage, $stage[0])
-  */
-
   if (!opts.allowStageSort) {
     $stage.sortable('disable')
   }
@@ -89,7 +80,6 @@ const FormBuilder = function(opts, element) {
   $cbUL.sortable({
     helper: 'clone',
     opacity: 0.9,
-    //* EK */connectWith: $stage,
     /* EK */ connectWith: 'ul',
     cancel: '.fb-separator',
     cursor: 'move',
@@ -983,7 +973,7 @@ const FormBuilder = function(opts, element) {
     $li.data('fieldData', { attrs: values })
 
     if (typeof h.stopIndex !== 'undefined') {
-        $('> li', $activeStage)
+      $('> li', $activeStage)
         .eq(h.stopIndex)
         .before($li)
     } else {

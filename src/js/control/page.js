@@ -1,4 +1,8 @@
 import control from '../control';
+import layout from '../layout';
+import Helpers from '../helpers';
+import { Data } from '../data';
+import Dom from '../dom';
 
 /**
  * Button class
@@ -24,34 +28,65 @@ export default class controlPage extends control {
    * @return {Object} DOM Element to be injected into the form.
    */
   build() {
-    const localId = 'page-'+Math.floor(Math.random()*1000000);
-    this.containerId = 'wrapper-' + localId;
+    const { values /* , value, placeholder, type, inline, other, toggle, ...data */ } = this.config;
+
+    if (values) {
+      /* bilt controls from JSON config (formData) */
+      console.log('PAGE::values: ', values);
+
+    }
+    
+    this.localId = 'page-'+Math.floor(Math.random()*1000000);
+    this.containerId = 'wrapper-' + this.localId;
     const domElementSpan = $(`<ul id="${this.containerId}" class="frmb" style="background-color: #eee;padding: 1rem;"></ul>`)[0];
     
-    return this.markup('span', domElementSpan, {id: localId});
+    return this.markup('span', domElementSpan, {id: this.localId});
   }
   
   /**
    * onReder - called after build function
    */
   onRender () {
-    // const h = window.helperStageInstance;
-    // const h = window.formBuilderSortableEvents;
-    // console.log(this.dom)
-    $('#' + this.containerId).sortable({
+    const _cid = this.containerId;
+
+    $('#' + _cid).sortable({
       cursor: 'move',
       opacity: 0.9,
       revert: 150,
       connectWith: 'ul',
-      // beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
-      // start: (evt, ui) => h.startMoving.call(h, evt, ui),
-      // stop: (evt, ui) => h.stopMoving.call(h, evt, ui),
-     // beforeStop: h.beforeStop,
-     // start: h.start,
-     // stop: h.stop,
       cancel: ['input', 'select', 'textarea', '.disabled-field', '.form-elements', '.btn', 'button', '.is-locked'].join(', '),
       placeholder: 'frmb-placeholder',
-    }).disableSelection();
+    }).disableSelection().droppable({
+      drop: (e, u) => {
+        this.update(e, u, _cid);
+      }
+    });
+  }
+
+  /**
+   * update after Dragg control to Page
+   * @param {*} event 
+   * @param {*} ui 
+   * @param {*} cid 
+   */
+  update (event, ui, cid) {
+    setTimeout(e => {
+    console.log('>>> this.containerId', cid, this.localId)
+      
+    const data = new Data(cid);
+    const d = new Dom(cid);
+    const h = new Helpers(cid, new layout(null, true), this);
+    data.formID = cid;
+    h.editorUI(cid);
+
+    const _stageFb = event.target // $('#' + cid)[0];
+    // console.log('_stageFb', _stageFb)
+    // console.log('PAGE::update()', event, ui, h);
+    console.log('h.prepData()', h.prepData( _stageFb ));
+    console.log('h.prepData()', h.getFormData());
+    console.log('h.prepData()', this.config);
+
+    }, 0);
   }
 }
 
