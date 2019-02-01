@@ -355,9 +355,9 @@ const FormBuilder = function(opts, element) {
       text: defaultAttrs.concat(['subtype', 'maxlength']),
       date: defaultAttrs,
       file: defaultAttrs.concat(['subtype', 'multiple']),
-      header: ['label', 'subtype', 'className', 'access'],
+      header: ['name', 'label', 'subtype', 'className', 'access'],
       hidden: ['name', 'value', 'access'],
-      paragraph: ['label', 'subtype', 'className', 'access'],
+      paragraph: ['name','label', 'subtype', 'className', 'access'],
       number: defaultAttrs.concat(['min', 'max', 'step']),
       select: defaultAttrs.concat(['multiple', 'options']),
       textarea: defaultAttrs.concat(['subtype', 'maxlength', 'rows']),
@@ -387,9 +387,10 @@ const FormBuilder = function(opts, element) {
   /**
    * Build the editable properties for the field
    * @param  {object} values configuration object for advanced fields
+   * @param  {string} tab tab name
    * @return {String}        markup for advanced fields
    */
-  const advFields = values => {
+  const advFields = (values, tab) => {
     const { type } = values
     const advFields = []
     const fieldAttrs = defaultFieldAttrs(type)
@@ -473,16 +474,26 @@ const FormBuilder = function(opts, element) {
         }
         return boolAttribute('multiple', values, typeLabels[type] || typeLabels.default)
       },
-    }
-    let key
-    const roles = values.role !== undefined ? values.role.split(',') : []
-    const numAttrs = ['min', 'max', 'step']
+      };
+      const conditioanalFieldMap = {
+          conditioanalDisplay: () => selectAttribute('conditioanalDisplay', values, [
+              { label: '', value: null },
+              { label: 'show', value: 'show'},
+              { label: 'hide', value: 'hide' }
+          ], 'This component should Display'),
+          conditioanalField: () => selectAttribute('conditioanalField', values, [], 'When the form component'),
+          conditioanalValue: () => textAttribute('conditioanalValue', values, false, 'Has the value')
+      };
+      let key;
+      const roles = values.role !== undefined ? values.role.split(',') : [];
+      const numAttrs = ['min', 'max', 'step'];
 
     numAttrs.forEach(numAttr => {
       advFieldMap[numAttr] = () => numberAttribute(numAttr, values)
     })
 
-    const noDisable = ['name', 'className']
+      if (tab === 'base') {
+          const noDisable = ['name', 'className'];
 
     Object.keys(fieldAttrs).forEach(index => {
       const attr = fieldAttrs[index]
@@ -508,14 +519,19 @@ const FormBuilder = function(opts, element) {
       }
     })
 
-    // Append custom attributes as defined in typeUserAttrs option
-    if (opts.typeUserAttrs[type]) {
-      const customAttr = processTypeUserAttrs(opts.typeUserAttrs[type], values)
-      advFields.push(customAttr)
-    }
+          // Append custom attributes as defined in typeUserAttrs option
+          if (opts.typeUserAttrs[type]) {
+              const customAttr = processTypeUserAttrs(opts.typeUserAttrs[type], values);
+              advFields.push(customAttr);
+          }          
+      } else {
+          advFields.push(conditioanalFieldMap['conditioanalDisplay']());
+          advFields.push(conditioanalFieldMap['conditioanalField']());
+          advFields.push(conditioanalFieldMap['conditioanalValue']());
+      }
 
-    return advFields.join('')
-  }
+      return advFields.join('');
+  };
 
   /**
    * Detects the type of user defined attribute
@@ -639,6 +655,24 @@ const FormBuilder = function(opts, element) {
     return `<div class="form-group ${name}-wrap">${label}${inputWrap}</div>`
   }
 
+     /**
+     * update ForFields
+     */
+    function updateForFields() {
+        const formData = h.getFormData();
+        const exclude = ['header', 'paragraph', 'file', 'autocomplete', 'hidden'];
+
+        formData.forEach(
+            obj => {
+                const data = formData.filter(e => e.name !== obj.name && ($.inArray(e.type, exclude) < 0))
+                    .map(e => { return { label: e.label, value: e.name } });
+                data.unshift({ label: '', value: null });
+                $('.field-' + obj.name + '-preview').closest('li.form-field')
+                    .find('.conditioanalField-wrap')
+                    .replaceWith($(selectAttribute('conditioanalField', obj, data, 'When the form component')));
+            });
+    }
+
   const boolAttribute = (name, values, labels = {}) => {
     const label = txt =>
       m('label', txt, {
@@ -747,9 +781,10 @@ const FormBuilder = function(opts, element) {
    * @param  {String} attribute  attribute name
    * @param  {Object} values     aka attrs
    * @param  {Array} optionData  select field option data
+   * @param  {String} label  field label
    * @return {String}            select input makrup
    */
-  const selectAttribute = (attribute, values, optionData) => {
+    const selectAttribute = (attribute, values, optionData, label = null) => {
     const selectOptions = optionData.map((option, i) => {
       let optionAttrs = Object.assign(
         {
@@ -768,12 +803,12 @@ const FormBuilder = function(opts, element) {
       id: attribute + '-' + data.lastID,
       name: attribute,
       className: `fld-${attribute} form-control`,
-    }
-    const labelText = mi18n.get(attribute) || capitalize(attribute) || ''
-    const label = m('label', labelText, { for: selectAttrs.id })
-    const select = m('select', selectOptions, selectAttrs)
-    const inputWrap = m('div', select, { className: 'input-wrap' })
-    const attrWrap = m('div', [label, inputWrap], {
+    };
+      const labelText = label !== null ? label: mi18n.get(attribute) || capitalize(attribute) || '';
+      const labelObj = m('label', labelText, { for: selectAttrs.id });
+      const select = m('select', selectOptions, selectAttrs);
+      const inputWrap = m('div', select, { className: 'input-wrap' });
+      const attrWrap = m('div', [labelObj, inputWrap], {
       className: `form-group ${selectAttrs.name}-wrap`,
     })
 
@@ -785,13 +820,14 @@ const FormBuilder = function(opts, element) {
    * @param  {String} attribute
    * @param  {Object} values
    * @param  {Boolean} isHidden
+   * @param  {String} label
    * @return {String}
    */
-  const textAttribute = (attribute, values, isHidden = false) => {
-    const textArea = ['paragraph']
+  const textAttribute = (attribute, values, isHidden = false, label = null) => {
+    const textArea = ['paragraph'];
 
-    let attrVal = values[attribute] || ''
-    let attrLabel = mi18n.get(attribute)
+      let attrVal = values[attribute] || '';
+      let attrLabel = label === null ? mi18n.get(attribute) : label;
 
     if (attribute === 'label') {
       if (textArea.includes(values.type)) {
@@ -912,12 +948,22 @@ const FormBuilder = function(opts, element) {
     }
     liContents.push(m('span', '?', descAttrs))
 
-    liContents.push(m('div', '', { className: 'prev-holder' }))
-    const formElements = m('div', [advFields(values), m('a', mi18n.get('close'), { className: 'close-field' })], {
-      className: 'form-elements',
-    })
+      liContents.push(m('div', '', { className: 'prev-holder' }));
+        const formElements = m('div', advFields(values, 'base'), { className: 'form-elements tab-base'});
+        const formConditional = m('div', advFields(values, 'conditional'), { className: 'form-elements tab-conditional hideTab'});
 
-    const editPanel = m('div', formElements, {
+      const tabsBtns = m('ul', [
+          m('li', m('a', 'Base', { className: 'tab-base-btn selectedTab' })),
+          m('li', m('a', 'Conditional', { className: 'tab-conditional-btn' }))
+      ], { className: 'tab-elements' });
+      const tabs = m('div', [
+          tabsBtns,
+          formElements,
+          formConditional,
+          m('a', mi18n.get('close'), { className: 'close-field' })
+        ], { className: 'frm-holder-tabs' });
+
+      const editPanel = m('div', tabs, {
       id: `${data.lastID}-holder`,
       className: 'frm-holder',
       dataFieldId: data.lastID,
@@ -937,7 +983,7 @@ const FormBuilder = function(opts, element) {
     $li.data('fieldData', { attrs: values })
 
     if (typeof h.stopIndex !== 'undefined') {
-      $('> li', d.stage)
+        $('> li', $activeStage)
         .eq(h.stopIndex)
         .before($li)
     } else {
@@ -964,8 +1010,10 @@ const FormBuilder = function(opts, element) {
       }
     }
 
-    data.lastID = h.incrementId(data.lastID)
-  }
+        data.lastID = h.incrementId(data.lastID);
+
+        setTimeout(() => updateForFields());
+  };
 
   // Select field html, since there may be multiple
   const selectFieldOptions = function(name, optionData, multipleSelect) {
@@ -1109,7 +1157,36 @@ const FormBuilder = function(opts, element) {
     }
   })
 
-  $stage.on('dblclick', 'li.form-field', e => {
+    // toggle tabs
+    $stage.on('click touchstart', '.toggle-form, .tab-base-btn', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (e.handled !== true) {
+            const targetID = window.$(e.target)
+                .parents('.form-field:eq(0)')
+                .attr('id');
+            h.toggleTab(targetID, '.tab-base', '.tab-base-btn');
+            e.handled = true;
+        } else {
+            return false;
+        }
+    });
+
+    $stage.on('click touchstart', '.toggle-form, .tab-conditional-btn', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (e.handled !== true) {
+            const targetID = window.$(e.target)
+                .parents('.form-field:eq(0)')
+                .attr('id');
+            h.toggleTab(targetID, '.tab-conditional', '.tab-conditional-btn');
+            e.handled = true;
+        } else {
+            return false;
+        }
+    });
+
+        $stage.on('dblclick', 'li.form-field', e => {
     if (['select', 'input', 'label'].includes(e.target.tagName.toLowerCase()) || e.target.contentEditable === 'true') {
       return
     }
@@ -1167,11 +1244,12 @@ const FormBuilder = function(opts, element) {
 
   // update preview to label
   addEventListeners(d.stage, 'keyup change', ({ target }) => {
-    if (!target.classList.contains('fld-label')) return
-    const value = target.value || target.innerHTML
-    const label = closest(target, '.form-field').querySelector('.field-label')
-    label.innerHTML = parsedHtml(value)
-  })
+    if (!target.classList.contains('fld-label')) return;
+      const value = target.value || target.innerHTML;
+      const label = closest(target, '.form-field').querySelector('.field-label');
+      label.innerHTML = parsedHtml(value);
+      setTimeout(() => updateForFields());
+  });
 
   // remove error styling when users tries to correct mistake
   $stage.on('keyup', 'input.error', ({ target }) => $(target).removeClass('error'))
@@ -1266,7 +1344,7 @@ const FormBuilder = function(opts, element) {
       h.confirm([warnH3, warnMessage], () => h.removeField(deleteID), coords)
       $field.addClass('deleting')
     } else {
-      h.removeField(deleteID)
+        h.removeField(deleteID, 250, () => setTimeout(() => updateForFields(), 300));
     }
   })
 

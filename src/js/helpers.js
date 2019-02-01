@@ -174,72 +174,104 @@ export default class Helpers {
 
     const formTemplate = m('form-template', flattenArray(fields).join(''))
     return xmlSerializer.serializeToString(formTemplate)
-  }
+    }
+
+    /**
+     * Get formData from editor in JS Object format
+     * @param  {Object} form aka stage, DOM element
+     * @return {Object} formData
+     */
+    prepDataHelp(form) {
+        const preparedData = { formData: [], layout: { 'type': 'layout', 'elements': []} }
+        const d = this.d
+        const _this = this
+
+        if (form.childNodes.length !== 0) {
+            // build data object
+            forEach(form.childNodes, function (index, field) {
+                const $field = $(field)
+
+                if ($field.hasClass('disabled-field'))
+                    return;
+
+                let fieldData = _this.getTypes($field)
+
+                const $roleInputs = $('.roles-field:checked', field)
+                const roleVals = $roleInputs.map(index => $roleInputs[index].value).get()
+
+                fieldData = Object.assign({}, fieldData, _this.getAttrVals(field))
+
+                if (fieldData.subtype) {
+                    if (fieldData.subtype === 'quill') {
+                        const id = `${fieldData.name}-preview`
+                        if (window.fbEditors.quill[id]) {
+                            const instance = window.fbEditors.quill[id].instance
+                            const data = instance.getContents()
+                            fieldData.value = window.JSON.stringify(data.ops)
+                        }
+                    } else if (fieldData.subtype === 'tinymce' && window.tinymce) {
+                        const id = `${fieldData.name}-preview`
+                        if (window.tinymce.editors[id]) {
+                            const editor = window.tinymce.editors[id]
+                            fieldData.value = editor.getContent()
+                        }
+                    }
+                }
+
+                if (roleVals.length) {
+                    fieldData.role = roleVals.join(',')
+                }
+
+                fieldData.className = fieldData.className || fieldData.class
+
+                if (fieldData.className) {
+                    const match = /(?:^|\s)btn-(.*?)(?:\s|$)/g.exec(fieldData.className)
+                    if (match) {
+                        fieldData.style = match[1]
+                    }
+                }
+
+                fieldData = trimObj(fieldData)
+
+                const multipleField = fieldData.type && fieldData.type.match(d.optionFieldsRegEx)
+
+                if (multipleField) {
+                    fieldData.values = _this.fieldOptionData($field)
+                }
+
+                if (fieldData.type === 'page') {
+                    const element = fieldData
+                    element.pages = []
+
+                    forEach($(field).find('> div.prev-holder > div > span > ul'), function (index, form) {
+                        const innerData = _this.prepDataHelp(form);
+                        preparedData.formData = preparedData.formData.concat(innerData.formData)
+                        const page = { elements: innerData.layout.elements}
+                        element.pages.push(page)
+                    });
+
+                    preparedData.layout.elements.push(element)
+
+                    return;
+                }
+
+                preparedData.formData.push(fieldData)
+                preparedData.layout.elements.push({ name: fieldData.name})
+            })
+        }
+
+        return preparedData
+    }
 
   /**
    * Get formData from editor in JS Object format
    * @param  {Object} form aka stage, DOM element
    * @return {Object} formData
    */
-  prepData(form) {
-    const formData = []
-    const d = this.d
-    const _this = this
-
-    if (form.childNodes.length !== 0) {
-      // build data object
-      forEach(form.childNodes, function(index, field) {
-        const $field = $(field)
-
-        if (!$field.hasClass('disabled-field')) {
-          let fieldData = _this.getTypes($field)
-          const $roleInputs = $('.roles-field:checked', field)
-          const roleVals = $roleInputs.map(index => $roleInputs[index].value).get()
-
-          fieldData = Object.assign({}, fieldData, _this.getAttrVals(field))
-
-          if (fieldData.subtype) {
-            if (fieldData.subtype === 'quill') {
-              const id = `${fieldData.name}-preview`
-              if (window.fbEditors.quill[id]) {
-                const instance = window.fbEditors.quill[id].instance
-                const data = instance.getContents()
-                fieldData.value = window.JSON.stringify(data.ops)
-              }
-            } else if (fieldData.subtype === 'tinymce' && window.tinymce) {
-              const id = `${fieldData.name}-preview`
-              if (window.tinymce.editors[id]) {
-                const editor = window.tinymce.editors[id]
-                fieldData.value = editor.getContent()
-              }
-            }
-          }
-
-          if (roleVals.length) {
-            fieldData.role = roleVals.join(',')
-          }
-
-          fieldData.className = fieldData.className || fieldData.class
-
-          if (fieldData.className) {
-            const match = /(?:^|\s)btn-(.*?)(?:\s|$)/g.exec(fieldData.className)
-            if (match) {
-              fieldData.style = match[1]
-            }
-          }
-
-          fieldData = trimObj(fieldData)
-
-          const multipleField = fieldData.type && fieldData.type.match(d.optionFieldsRegEx)
-
-          if (multipleField) {
-            fieldData.values = _this.fieldOptionData($field)
-          }
-
-          formData.push(fieldData)
-        }
-      })
-    }
+  prepData(form) {    
+    const preparedData = this.prepDataHelp(form)
+    const formData = preparedData.formData
+    formData.push(preparedData.layout)
 
     return formData
   }
@@ -345,7 +377,7 @@ export default class Helpers {
     const d = this.d
     const fieldClass = $field.attr('class')
     const field = $field[0]
-    if (fieldClass.includes('input-control')) {
+    if (!fieldClass || fieldClass.includes('input-control')) {
       return
     }
 
@@ -755,7 +787,7 @@ export default class Helpers {
       $preview.toggle()
       $editPanel.toggle()
     }
-    this.updatePreview($(field))
+    // this.updatePreview($(field))
     if (field.classList.contains('editing')) {
       this.formBuilder.currentEditPanel = $editPanel[0]
       config.opts.onOpenFieldEdit($editPanel[0])
@@ -765,6 +797,21 @@ export default class Helpers {
       document.dispatchEvent(events.fieldEditClosed)
     }
   }
+
+    /**
+     * Toggles the tab for the given field
+     * @param  {String} fieldId
+     * @param  {String} selectedTab
+     * @param  {String} selectedTabBtn
+     */
+    toggleTab(fieldId, selectedTab, selectedTabBtn) {
+        const field = document.getElementById(fieldId)
+        $('.frm-holder-tabs .form-elements', field).addClass('hideTab')
+        $(selectedTab, field).removeClass('hideTab')
+        $('.tab-elements > li > a', field).removeClass('selectedTab')
+        $(selectedTabBtn, field).addClass('selectedTab')
+        this.updatePreview($(field))
+    }
 
   /**
    * Get the computed style for DOM element
@@ -856,9 +903,10 @@ export default class Helpers {
    * Remove a field from the stage
    * @param  {String}  fieldID ID of the field to be removed
    * @param  {Number}  animationSpeed
-   * @return {Boolean} fieldRemoved returns true if field is removed
+   * @param {Function} callBack call back function
+   * @return {Boolean} fieldRemoved returns true if field is removed   
    */
-  removeField(fieldID, animationSpeed = 250) {
+  removeField(fieldID, animationSpeed = 250, callBack = null) {
     let fieldRemoved = false
     const _this = this
     const form = this.d.stage
@@ -903,7 +951,11 @@ export default class Helpers {
       userEvents.onremove(field)
     }
 
-    document.dispatchEvent(events.fieldRemoved)
+      document.dispatchEvent(events.fieldRemoved)
+
+      if (callBack)
+          callBack();
+
     return fieldRemoved
   }
 

@@ -172,6 +172,7 @@
       "node": true
     },
     "rules": {
+      "linebreak-style": 0,
       "no-unused-vars": 1,
       "no-console": 0,
       "new-cap": 0,

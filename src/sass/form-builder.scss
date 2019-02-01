@@ -214,3 +214,55 @@ textarea {
     }
   }
 }
+
+.tab-elements {
+    border-bottom: 1px solid #dddddd;
+    list-style: none;
+    height: 32px;
+    margin-top: 20px;
+}
+
+.tab-elements > li {
+    display: inline;
+    margin-bottom: -1px;
+    list-style: none;
+}
+
+.form-elements select.fld-shape.form-control{
+    overflow: auto;
+}
+
+.tab-elements > li > a {
+    background-color: #e7e7e7;
+    color: #222222;
+    margin-right: 2px;
+    line-height: 1.4;
+    border: 1px solid transparent;
+    border-radius: 0 0 0 0;
+    position: relative;
+    padding: 10px 15px;
+}
+
+.tab-elements > li > a:hover {
+    color: #6f6f6f;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+.hideTab{
+    display: none;
+}
+
+.tab-elements > li > a.selectedTab {
+    background-color: #aaa;
+}
+
+.form-wrap.form-builder .frmb .form-elements.tab-conditional label:first-child{
+    width: 30%;
+}
+
+.form-wrap.form-builder .frmb .form-elements.tab-conditional .input-wrap {
+    width: 68%;
+}

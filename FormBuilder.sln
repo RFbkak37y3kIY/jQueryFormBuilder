@@ -73,6 +73,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "control", "control", "{C341
 		src\js\control\file.fineuploader.js = src\js\control\file.fineuploader.js
 		src\js\control\hidden.js = src\js\control\hidden.js
 		src\js\control\index.js = src\js\control\index.js
+		src\js\control\page.js = src\js\control\page.js
 		src\js\control\paragraph.js = src\js\control\paragraph.js
 		src\js\control\README.md = src\js\control\README.md
 		src\js\control\select.js = src\js\control\select.js
