@@ -248,7 +248,7 @@ export default class Helpers {
                     const element = fieldData
                     element.pages = []
 
-                    forEach($(field).find('> div.prev-holder > div > span > ul'), function (index, form) {
+                    forEach($(field).find('> div.prev-holder > div > div > div > div.LayoutPages > div > div > ul'), function (index, form) {
                         const innerData = _this.prepDataHelp(form);
                         preparedData.formData = preparedData.formData.concat(innerData.formData)
                         const page = { elements: innerData.layout.elements}

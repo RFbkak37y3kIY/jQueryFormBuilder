@@ -27,20 +27,24 @@ export default class controlPage extends control {
    * build a paragraph DOM element
    * @return {Object} DOM Element to be injected into the form.
    */
-  build() {
+    build() {
     const { values /* , value, placeholder, type, inline, other, toggle, ...data */ } = this.config;
 
     if (values) {
       /* bilt controls from JSON config (formData) */
       console.log('PAGE::values: ', values);
 
-    }
-    
+        }
+
     this.localId = 'page-'+Math.floor(Math.random()*1000000);
     this.containerId = 'wrapper-' + this.localId;
-    const domElementSpan = $(`<ul id="${this.containerId}" class="frmb" style="background-color: #eee;padding: 1rem;"></ul>`)[0];
+
+    const layoutPageBody = $('<div class="LayoutPageBody"></div>')
+        .append('<div class="LayoutPageThumbnails"><div><div><span>Page 1</span></div ></div></div>')
+        .append('<div></div>')
+        .append(`<div class="LayoutPages"><div><div><ul id="${this.containerId}" class="frmb"></ul></div></div></div>`)   
     
-    return this.markup('span', domElementSpan, {id: this.localId});
+    return this.markup('div', layoutPageBody[0], {id: this.localId, class: 'LayoutPage'});
   }
   
   /**

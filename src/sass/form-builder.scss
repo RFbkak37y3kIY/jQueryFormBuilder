@@ -266,3 +266,116 @@ textarea {
 .form-wrap.form-builder .frmb .form-elements.tab-conditional .input-wrap {
     width: 68%;
 }
+
+.LayoutSection {
+    border: 1px solid #eee;
+}
+
+.LayoutSectionHeader {
+    background-color: #ddd;
+    padding: 6px;
+}
+
+.LayoutSectionBody {
+    padding: 15px;
+}
+
+.LayoutSectionWrappedTop {
+    border-top: none;
+}
+
+.LayoutSectionWrappedBottom {
+    border-bottom: none;
+}
+
+.LayoutPage {
+    border: 1px solid #eee;
+    height: 400px;
+}
+
+.LayoutPageHeader {
+    background-color: #ddd;
+    padding: 6px;
+}
+
+.LayoutPageBody {
+    width: 100%;
+    height: 100%;
+}
+
+.LayoutPageBody > div {
+    display: inline-block;
+    width: 20px;
+}
+
+.LayoutPageBody > div.LayoutPageThumbnails {
+    width: 160px;
+}
+
+.LayoutPageThumbnails{
+    height: 100%;
+}
+
+.LayoutPageThumbnails > div {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    background: #eee;
+}
+
+.LayoutPageThumbnails > div > div {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 160px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: calc(50% + 15px);
+    cursor: pointer;
+}
+.LayoutPages {
+    height: 100%;
+}
+
+.LayoutPageBody > div.LayoutPages {
+    width: calc(100% - 180px);
+}
+
+.LayoutPages > div {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+    background: #eee;
+}
+
+.LayoutPages > div > div {
+    background: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    height: 800px;
+}
+
+.LayoutPages > div > div:last-child {
+    margin-bottom: 0;
+}
+
+.LayoutPages > div > div > ul {
+    background: #eee;
+    height: 100%;
+    padding: 10px;
+}
+
+.LayoutTable {
+    width: 100%;
+}
+
+.LayoutTable td {
+    border-top: 1px solid #dddddd;
+    vertical-align: top;
+    padding: 8px;
+}
+
+.LayoutTableBordered,
+.LayoutTableBordered td {
+    border: 1px solid #dddddd;
+}
