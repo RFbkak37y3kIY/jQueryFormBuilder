@@ -1,10 +1,10 @@
 import control from '../control';
 
 /**
- * Button class
- * Output a <button>Label</button> form element
+ * controlTableLayout class
+ * 
  */
-export default class controlInlineGroup extends control {
+export default class controlTableLayout extends control {
 
   /**
      * Class configuration - return the icons & label related to this control
@@ -13,7 +13,7 @@ export default class controlInlineGroup extends control {
   static get definition() {
     return {
       i18n: {
-        default: 'Inline Group'
+        default: 'Table Layout'
       }
     };
   }
@@ -23,15 +23,9 @@ export default class controlInlineGroup extends control {
    * @return {Object} DOM Element to be injected into the form.
    */
   build() {
-    
-    /* this.icons = this.markup('div', icons, {
-      id: 'inlineGroup-icons'
-    });
-    */ 
-   
-    const localId = 'page-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
+    const localId = 'table-layout-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
     this.containerId = 'wrapper-' + localId;
-    const domElementSpan = $(`<ul id="${this.containerId}" class="frmb" style="background-color: #eee;padding: 0.3rem; display: flex; flex-direction: row;"></ul>`)[0];
+    const domElementSpan = $(`<ul id="${this.containerId}" class="frmb" style="background-color: #eee;padding: 1rem; display: flex; flex-direction: row;"></ul>`)[0];
     
     return this.markup('span', domElementSpan, {id: localId});
   }
@@ -52,5 +46,5 @@ export default class controlInlineGroup extends control {
 }
 
 // register the following controls
-control.register('inlineGroup', controlInlineGroup);
-control.register(['inlineGroup', 'ol'], controlInlineGroup, 'inlineGroup');
+control.register('TableLayout', controlTableLayout);
+control.register(['TableLayout', 'ol'], controlTableLayout, 'TableLayout');

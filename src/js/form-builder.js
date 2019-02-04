@@ -91,7 +91,7 @@ const FormBuilder = function(opts, element) {
     beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
     distance: 3,
     update: function(event, ui) {
-      if (h.doCancel || (ui.item[0].dataset["type"] == "page" && ui.item.parent()[0] !== d.stage)) {
+      if (h.doCancel || (ui.item[0].dataset['type'] == 'page' && ui.item.parent()[0] !== d.stage)) {
         return false
       }
 
@@ -157,6 +157,7 @@ const FormBuilder = function(opts, element) {
   $(d.controls).on('click', 'li', ({ target }) => {
     const $control = $(target).closest('li')
     h.stopIndex = undefined
+    $activeStage = $stage
     processControl($control)
     h.save.call(h)
   })

@@ -733,3 +733,7 @@
   font-size: 12px;
   cursor: default;
 }
+
+li > div.prev-holder > div > label {
+	display: none;
+}

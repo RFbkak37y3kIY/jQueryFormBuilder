@@ -11,7 +11,8 @@ import controlTinymce from './textarea.tinymce';
 import controlQuill from './textarea.quill';
 import controlPage from './page';
 import controlInlineGroup from './inlineGroup';
-
+import controlSaction from './section';
+import controlTableLayout from './tablelayout';
 
 export default {
   controlAutocomplete,
@@ -26,6 +27,8 @@ export default {
   controlTinymce,
   controlQuill,
   controlPage,
-  controlInlineGroup
+  controlInlineGroup,
+  controlSaction,
+  controlTableLayout
 };
 

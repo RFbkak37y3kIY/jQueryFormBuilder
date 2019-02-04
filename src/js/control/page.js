@@ -5,8 +5,8 @@ import { Data } from '../data';
 import Dom from '../dom';
 
 /**
- * Button class
- * Output a <button>Label</button> form element
+ * controlPage class
+ * 
  */
 export default class controlPage extends control {
 
@@ -18,7 +18,7 @@ export default class controlPage extends control {
     return {
       icon: '🗄',
       i18n: {
-        default: 'Page Control'
+        default: 'Page'
       }
     };
   }
@@ -36,7 +36,7 @@ export default class controlPage extends control {
 
         }
 
-    this.localId = 'page-'+Math.floor(Math.random()*1000000);
+    const localId = 'page-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
     this.containerId = 'wrapper-' + this.localId;
 
     const layoutPageBody = $('<div class="LayoutPageBody"></div>')
