@@ -68,7 +68,7 @@ const FormBuilder = function(opts, element) {
     beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
     start: (evt, ui) => h.startMoving.call(h, evt, ui),
     stop: (evt, ui) => h.stopMoving.call(h, evt, ui),
-    cancel: ['input', 'select', 'textarea', '.disabled-field', '.form-elements', '.btn', 'button', '.is-locked'].join(', '),
+    cancel: ['input', 'select', 'textarea', '.disabled-field', '.form-elements', '.LayoutPageBody', '.btn', 'button', '.is-locked'].join(', '),
     placeholder: 'frmb-placeholder',
   })
 
@@ -91,12 +91,10 @@ const FormBuilder = function(opts, element) {
     beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
     distance: 3,
     update: function(event, ui) {
-      if (h.doCancel) {
+      if (h.doCancel || (ui.item[0].dataset["type"] == "page" && ui.item.parent()[0] !== d.stage)) {
         return false
       }
-      console.log(`
-      droppet to stage
-    `, ui.item.parent()[0])
+
       // if (ui.item.parent()[0] === d.stage) {
       if (ui.item.parent()[0].classList.contains('frmb')) {
         $activeStage = ui.item.parent()[0];
@@ -329,6 +327,7 @@ const FormBuilder = function(opts, element) {
 
     const typeAttrsMap = {
       autocomplete: defaultAttrs.concat(['options', 'requireValidOption']),
+      page: ['label'],
       button: ['label', 'subtype', 'style', 'className', 'name', 'value', 'access'],
       checkbox: [
         'required',

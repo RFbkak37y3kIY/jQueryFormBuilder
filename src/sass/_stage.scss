@@ -40,6 +40,9 @@
     &:hover {
       .field-actions {
         opacity: 1;
+        margin-top: 1px;
+        border-radius: 5px;
+        overflow: hidden;
       }
 
       border-color: #66afe9;
@@ -263,11 +266,11 @@
     .ql-editor {
       min-height: 125px;
     }
-
+/*
     .form-group > label:not([class='fb-checkbox-label']) {
-      display: none;
+       display: none;
     }
-
+*/
     select,
     input[type='text'],
     textarea,
