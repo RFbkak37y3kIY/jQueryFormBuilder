@@ -36,7 +36,7 @@ export default class controlPage extends control {
 
         }
 
-    const localId = 'page-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
+    this.localId = 'page-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
     this.containerId = 'wrapper-' + this.localId;
 
     const layoutPageBody = $('<div class="LayoutPageBody"></div>')
