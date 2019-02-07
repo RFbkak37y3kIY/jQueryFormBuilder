@@ -13,6 +13,7 @@ import controlPage from './page';
 import controlInlineGroup from './inlineGroup';
 import controlSaction from './section';
 import controlTableLayout from './tablelayout';
+import currency from './currency';
 
 export default {
   controlAutocomplete,
@@ -29,6 +30,7 @@ export default {
   controlPage,
   controlInlineGroup,
   controlSaction,
-  controlTableLayout
+  controlTableLayout,
+  currency,
 };
 

@@ -24,7 +24,8 @@ import {
   closest,
   safename,
   forceNumber,
-} from './utils'
+} from './utils';
+import currency from './control/currency';
 
 const DEFAULT_TIMEOUT = 333
 
@@ -34,7 +35,7 @@ const FormBuilder = function(opts, element) {
   const formID = `frmb-${new Date().getTime()}`
   const data = new Data(formID)
   const d = new Dom(formID)
-  
+
 
   // prepare a new layout object with appropriate templates
   if (!opts.layout) {
@@ -320,6 +321,18 @@ const FormBuilder = function(opts, element) {
     return m('div', fieldOptions, { className: 'form-group field-options' }).outerHTML
   }
 
+  const fieldSelect = (name, values, list) => {
+    console.log(values);
+    const attrLabel = mi18n.get(name) || name;
+    const label = m('label', attrLabel);
+    const options = list
+      .map(item => m('option', item.label, { value: item.value, ...(item.value === values[name] ? { selected: 'selected' } : {}) }));
+    const select = m('select', options, { name, class: `fld-${name} form-control`, id: `${name}-${data.lastID}`,});
+    const inputWrap = m('div', [select], { class: 'input-wrap' });
+
+    return m('div', [label, inputWrap], { className: 'form-group field-options' }).outerHTML
+  };
+
   const defaultFieldAttrs = type => {
     const defaultAttrs = ['required', 'label', 'description', 'placeholder', 'className', 'name', 'access', 'value']
     const noValFields = ['header', 'paragraph', 'file', 'autocomplete'].concat(d.optionFields)
@@ -342,6 +355,7 @@ const FormBuilder = function(opts, element) {
         'other',
         'options',
       ],
+      currency: defaultAttrs.concat(['currencyValue']),
       text: defaultAttrs.concat(['subtype', 'maxlength']),
       date: defaultAttrs,
       file: defaultAttrs.concat(['subtype', 'multiple']),
@@ -442,6 +456,11 @@ const FormBuilder = function(opts, element) {
           second: mi18n.get('enableOtherMsg'),
         }),
       options: () => fieldOptions(values),
+      currencyValue: () => fieldSelect(
+        'currencyValue',
+        values,
+        currency.CURRENCIES.map(v => ({ value: v, label: v })),
+      ),
       requireValidOption: () =>
         boolAttribute('requireValidOption', values, {
           first: ' ',
@@ -513,7 +532,7 @@ const FormBuilder = function(opts, element) {
           if (opts.typeUserAttrs[type]) {
               const customAttr = processTypeUserAttrs(opts.typeUserAttrs[type], values);
               advFields.push(customAttr);
-          }          
+          }
       } else {
           advFields.push(conditioanalFieldMap['conditioanalDisplay']());
           advFields.push(conditioanalFieldMap['conditioanalField']());
@@ -1223,9 +1242,25 @@ const FormBuilder = function(opts, element) {
         })
       }
     } else {
-      const fieldVal = document.getElementById('value-' + field.id)
-      if (fieldVal) {
-        fieldVal.value = e.target.value
+      if (field.type === 'currency' && e.target.nodeName === 'SELECT') {
+        const currencyVal = document.getElementById('currencyValue-' + field.id);
+
+        if (currencyVal) {
+          const selectedOpt =  currencyVal.querySelector('option[selected]');
+
+          if (selectedOpt) {
+            selectedOpt.removeAttribute('selected');
+          }
+
+          currencyVal.querySelector(`option[value="${e.target.value}"]`)
+            .setAttribute('selected', 'selected');
+        }
+      } else {
+        const fieldVal = document.getElementById('value-' + field.id)
+
+        if (fieldVal) {
+          fieldVal.value = e.target.value
+        }
       }
     }
 
