@@ -42,7 +42,7 @@ const FormBuilder = function(opts, element) {
   }
   const layoutEngine = new opts.layout(opts.layoutTemplates, true)
 
-  console.log('opts',opts,opts.layoutTemplates)
+  // console.log('opts',opts,opts.layoutTemplates)
 
   const h = new Helpers(formID, layoutEngine, formBuilder)
   const m = markup
@@ -98,6 +98,9 @@ const FormBuilder = function(opts, element) {
       // if (ui.item.parent()[0] === d.stage) {
       if (ui.item.parent()[0].classList.contains('frmb')) {
         $activeStage = ui.item.parent()[0];
+        
+        console.log( {$activeStage} );
+
         h.doCancel = true
         processControl(ui.item)
       } else {
@@ -242,15 +245,50 @@ const FormBuilder = function(opts, element) {
     }
 
     appendNewField(field, isNew)
-
+    
     d.stage.classList.remove('empty')
   }
-
+  const getElementFromFields = function (name, fd) {
+    return fd.splice(fd.map((a, i) => a.name === name? i: null ).filter(a => !!a)[0], 1)[0]
+  }
+  const jsonFormatter = function (fd){
+    fd.map(a => { // scaning "layout" element
+      if (a.type == 'layout') {
+        a.elements = a.elements.map(b=> {
+          if(b.type === 'page') { // find page element
+            b.pages.map(c => {
+              // set elements to every page
+              c.elements = c.elements.map(d => getElementFromFields(d.name, fd))
+              return c;
+            })
+            return b;
+          } else {
+            // set elements to base SATGE
+            return getElementFromFields(b.name, fd);
+          }
+        });
+      } 
+      return a
+    });
+    return fd;
+  }
   // Parse saved XML template data
   const loadFields = function(formData) {
     formData = h.getData(formData)
     if (formData && formData.length) {
-      formData.forEach(fieldData => prepFieldVars(trimObj(fieldData)))
+      formData = jsonFormatter(formData)[0].elements;
+      formData.forEach(fieldData => {
+        $activeStage = $stage;
+        prepFieldVars(trimObj(fieldData));
+        if (fieldData.type == 'page') {
+          $activeStage = $($('li.page-field ul.frmb')[$('li.page-field').length-1]);
+          fieldData.pages.forEach(page => {
+            page.elements.forEach(field => {
+              prepFieldVars(trimObj(field));
+            })
+          })
+        }
+      })
       d.stage.classList.remove('empty')
     } else if (opts.defaultFields && opts.defaultFields.length) {
       // Load default fields if none are set
@@ -321,14 +359,14 @@ const FormBuilder = function(opts, element) {
   }
 
   const defaultFieldAttrs = type => {
-    const defaultAttrs = ['required', 'label', 'description', 'placeholder', 'className', 'name', 'access', 'value']
+    const defaultAttrs = ['required', 'label', 'description', 'placeholder', 'className', 'name', 'access', 'value', 'controlHeight', 'pageHaight']
     const noValFields = ['header', 'paragraph', 'file', 'autocomplete'].concat(d.optionFields)
 
     const valueField = !noValFields.includes(type)
 
     const typeAttrsMap = {
       autocomplete: defaultAttrs.concat(['options', 'requireValidOption']),
-      page: ['label'],
+      page: ['label', 'controlHeight', 'pageHaight'],
       button: ['label', 'subtype', 'style', 'className', 'name', 'value', 'access'],
       checkbox: [
         'required',
@@ -396,6 +434,12 @@ const FormBuilder = function(opts, element) {
         return boolAttribute('inline', values, labels)
       },
       label: () => textAttribute('label', values),
+      
+      /* for page only */ 
+      controlHeight: () => textAttribute('controlHeight', values || '400px', null, 'Control height'),
+      /* for page only */ 
+      pageHaight: () => textAttribute('pageHaight', values || '800px', null, 'Page haight'),
+
       description: () => textAttribute('description', values),
       subtype: () => selectAttribute('subtype', values, subtypes[type]),
       style: () => btnStyles(values.style),
@@ -936,24 +980,27 @@ const FormBuilder = function(opts, element) {
       tooltip: values.description,
       style: values.description ? 'display:inline-block' : 'display:none',
     }
+
     liContents.push(m('span', '?', descAttrs))
 
-      liContents.push(m('div', '', { className: 'prev-holder' }));
-        const formElements = m('div', advFields(values, 'base'), { className: 'form-elements tab-base'});
-        const formConditional = m('div', advFields(values, 'conditional'), { className: 'form-elements tab-conditional hideTab'});
+    liContents.push(m('div', '', { className: 'prev-holder' }));
 
-      const tabsBtns = m('ul', [
-          m('li', m('a', 'Base', { className: 'tab-base-btn selectedTab' })),
-          m('li', m('a', 'Conditional', { className: 'tab-conditional-btn' }))
-      ], { className: 'tab-elements' });
-      const tabs = m('div', [
-          tabsBtns,
-          formElements,
-          formConditional,
-          m('a', mi18n.get('close'), { className: 'close-field' })
-        ], { className: 'frm-holder-tabs' });
+    const formElements = m('div', advFields(values, 'base'), { className: 'form-elements tab-base'});
+    const formConditional = m('div', advFields(values, 'conditional'), { className: 'form-elements tab-conditional hideTab'});
 
-      const editPanel = m('div', tabs, {
+    const tabsBtns = m('ul', [
+      m('li', m('a', 'Base', { className: 'tab-base-btn selectedTab' })),
+      m('li', m('a', 'Conditional', { className: 'tab-conditional-btn' }))
+    ], { className: 'tab-elements' });
+
+    const tabs = m('div', [
+      tabsBtns,
+      formElements,
+      formConditional,
+      m('a', mi18n.get('close'), { className: 'close-field' })
+    ], { className: 'frm-holder-tabs' });
+
+    const editPanel = m('div', tabs, {
       id: `${data.lastID}-holder`,
       className: 'frm-holder',
       dataFieldId: data.lastID,

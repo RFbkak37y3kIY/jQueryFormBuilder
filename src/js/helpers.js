@@ -186,7 +186,7 @@ export default class Helpers {
         const d = this.d
         const _this = this
 
-    console.log('form', form);
+    // console.log('form', form);
     // debugger;
     if (form.childNodes.length !== 0) {
       // build data object
@@ -378,6 +378,8 @@ export default class Helpers {
    * @param  {Object} $field jQuery DOM element
    */
   updatePreview($field) {
+    // console.log('updatePreview::')
+    
     const _this = this
     const d = this.d
     const fieldClass = $field.attr('class')
@@ -388,14 +390,17 @@ export default class Helpers {
 
     const fieldType = $field.attr('type')
     const $prevHolder = $('.prev-holder', field)
+    previewData
     let previewData = Object.assign({}, _this.getAttrVals(field, previewData), { type: fieldType })
+    
+    // console.log('updatePreview::',{fieldType , previewData})
 
     const style = $('.btn-style', field).val()
     if (style) {
       previewData.style = style
     }
 
-    if (fieldType.match(d && d.optionFieldsRegEx? d.optionFieldsRegEx: /(select|checkbox-group|checkbox|radio-group|autocomplete)/)) {
+    if (fieldType.match(d && d.optionFieldsRegEx? d.optionFieldsRegEx: /(layout|select|checkbox-group|checkbox|radio-group|autocomplete)/)) {
       previewData.values = []
       previewData.multiple = $('[name="multiple"]', field).is(':checked')
 
@@ -408,7 +413,7 @@ export default class Helpers {
         previewData.values.push(option)
       })
     }
-
+    // previewData.values
     previewData = trimObj(previewData)
 
     previewData.className = _this.classNames(field, previewData)
@@ -436,7 +441,7 @@ export default class Helpers {
       const x = e.clientX - fieldOffset.left - 21;
       const y = e.clientY - fieldOffset.top - elem.tt.offsetHeight - 12;
       elem.tt.style.transform = `translate(${x}px, ${y}px)`;
-      console.log('move')
+      // console.log('move')
     }
 
     const disabledFields = stage.querySelectorAll('.disabled-field')
@@ -1166,7 +1171,7 @@ export default class Helpers {
   getFormData(type = 'js', formatted = false, _stage = null) {
     
     const h = this
-    console.log('h.d.stage', _stage || h.d.stage)
+    // console.log('h.d.stage', _stage || h.d.stage)
     const data = {
       js: () => h.prepData(_stage || h.d.stage),
       xml: () => h.xmlSave(_stage || h.d.stage),

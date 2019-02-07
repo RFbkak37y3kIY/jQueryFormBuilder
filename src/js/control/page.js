@@ -30,11 +30,10 @@ export default class controlPage extends control {
     build() {
     const { values /* , value, placeholder, type, inline, other, toggle, ...data */ } = this.config;
 
-    if (values) {
-      /* bilt controls from JSON config (formData) */
-      console.log('PAGE::values: ', values);
-
-        }
+    if (values || this.config) {
+      /* build controls from JSON config (formData) */
+      // console.log('PAGE::build(): ', this);
+    }
 
     this.localId = 'page-'+(new Date().getTime())+'-'+Math.floor(Math.random()*899+100);
     this.containerId = 'wrapper-' + this.localId;
@@ -52,7 +51,7 @@ export default class controlPage extends control {
    */
   onRender () {
     const _cid = this.containerId;
-
+    // console.log('PAGE::onRender', this)
     $('#' + _cid).sortable({
       cursor: 'move',
       opacity: 0.9,
@@ -96,4 +95,4 @@ export default class controlPage extends control {
 
 // register the following controls
 control.register('page', controlPage);
-control.register(['page', 'ol'], controlPage, 'page');
+control.register('layout', controlPage);

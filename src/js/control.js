@@ -168,6 +168,7 @@ export default class control {
   static getClass(type, subtype) {
     const lookup = subtype ? type + '.' + subtype : type
     const controlClass = control.classRegister[lookup] || control.classRegister[type]
+    
     if (!controlClass) {
       return control.error(
         'Invalid control type. (Type: ' +
