@@ -92,7 +92,19 @@ const FormBuilder = function(opts, element) {
     beforeStop: (evt, ui) => h.beforeStop.call(h, evt, ui),
     distance: 3,
     update: function(event, ui) {
-      if (h.doCancel || (ui.item[0].dataset['type'] == 'page' && ui.item.parent()[0] !== d.stage)) {
+      const isNotStage = ui.item.parent()[0] !== d.stage;
+
+      if (h.doCancel
+
+        // Cancel page/layout if not in global
+        || ((ui.item[0].dataset['type'] === 'page' || ui.item[0].dataset['type'] === 'layout') && isNotStage)
+
+        // Cancel table in table
+        || (ui.item[0].dataset['type'] === 'table' && ui.item.parents('.fb-table').length !== 0)
+
+        // Cancel section if not in global and not in page
+        || (ui.item[0].dataset['type'] === 'section' && (isNotStage && ui.item.parents('.LayoutPages').length === 0))
+      ) {
         return false
       }
 
