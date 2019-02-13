@@ -237,7 +237,7 @@ export default class Helpers {
 
           // console.log('d', d);
 
-          const multipleField = fieldData.type && 
+          const multipleField = fieldData.type &&
               fieldData.type.match(d && d.optionFieldsRegEx? d.optionFieldsRegEx: /(select|checkbox-group|checkbox|radio-group|autocomplete)/)
 
           if (multipleField) {
@@ -258,6 +258,18 @@ export default class Helpers {
                     preparedData.layout.elements.push(element)
 
                     return;
+                }
+
+                if (fieldData.type === 'section') {
+                  const container = $('.fb-section ul.frmb', $field).get(0);
+                  const innerData = _this.prepDataHelp(container);
+                  const childElements = innerData.formData;
+
+                  if (childElements.length) {
+                    preparedData.formData = preparedData.formData.concat(childElements);
+
+                    fieldData.elements = childElements.map(e => ({ name: e.name }));
+                  }
                 }
 
                 if (fieldData.type === 'table') {

@@ -52,5 +52,5 @@ export default class controlSaction extends control {
 }
 
 // register the following controls
-control.register('saction', controlSaction);
-control.register(['saction', 'ol'], controlSaction, 'saction');
+control.register('section', controlSaction);
+control.register(['section', 'ol'], controlSaction, 'section');

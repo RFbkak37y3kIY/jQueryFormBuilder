@@ -279,6 +279,10 @@ const FormBuilder = function(opts, element) {
         });
       }
 
+      if (a.type === 'section') {
+        a.elements = a.elements.map(d => getElementFromFields(d.name, newFd))
+      }
+
       if (a.type === 'table' && a.cells && a.cells.length) {
         a.cells.forEach(cell => {
           cell.elements = cell.elements.map((d) => getElementFromFields(d.name, newFd));
@@ -307,6 +311,14 @@ const FormBuilder = function(opts, element) {
             page.elements.forEach(field => {
               prepFieldVars(trimObj(field));
             })
+          })
+        }
+
+        if (fieldData.type === 'section') {
+          $activeStage = $('ul.frmb', $li);
+
+          fieldData.elements.forEach(field => {
+            prepFieldVars(trimObj(field));
           })
         }
 
