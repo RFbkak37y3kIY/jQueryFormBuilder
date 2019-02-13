@@ -12,7 +12,6 @@ import controlQuill from './textarea.quill';
 import controlPage from './page';
 import controlInlineGroup from './inlineGroup';
 import controlSaction from './section';
-import controlTableLayout from './tablelayout';
 import currency from './currency';
 import table from './table';
 
@@ -31,7 +30,6 @@ export default {
   controlPage,
   controlInlineGroup,
   controlSaction,
-  controlTableLayout,
   currency,
   table,
 };
