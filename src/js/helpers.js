@@ -260,8 +260,8 @@ export default class Helpers {
                     return;
                 }
 
-                if (fieldData.type === 'section') {
-                  const container = $('.fb-section ul.frmb', $field).get(0);
+                if (fieldData.type === 'section' || fieldData.type === 'inlineGroup') {
+                  const container = $(`.fb-${fieldData.type} ul.frmb`, $field).get(0);
                   const innerData = _this.prepDataHelp(container);
                   const childElements = innerData.formData;
 

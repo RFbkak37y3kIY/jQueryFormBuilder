@@ -279,7 +279,7 @@ const FormBuilder = function(opts, element) {
         });
       }
 
-      if (a.type === 'section') {
+      if (a.type === 'section' || a.type === 'inlineGroup') {
         a.elements = a.elements.map(d => getElementFromFields(d.name, newFd))
       }
 
@@ -314,7 +314,7 @@ const FormBuilder = function(opts, element) {
           })
         }
 
-        if (fieldData.type === 'section') {
+        if (fieldData.type === 'section' || fieldData.type === 'inlineGroup') {
           $activeStage = $('ul.frmb', $li);
 
           fieldData.elements.forEach(field => {
