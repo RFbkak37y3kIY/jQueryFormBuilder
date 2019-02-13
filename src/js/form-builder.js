@@ -245,33 +245,50 @@ const FormBuilder = function(opts, element) {
       setTimeout(() => document.dispatchEvent(events.fieldAdded), 10)
     }
 
-    appendNewField(field, isNew)
-    
-    d.stage.classList.remove('empty')
+    const $li = appendNewField(field, isNew);
+
+    d.stage.classList.remove('empty');
+
+    // Return current elemtn to be able to use it as a container
+    return $li;
   }
+
   const getElementFromFields = function (name, fd) {
     return fd.splice(fd.map((a, i) => a.name === name? i: null ).filter(a => !!a)[0], 1)[0]
   }
+
   const jsonFormatter = function (fd){
+    // We need to use cloned array here.
+    // map and splice on the same item lead to partial iteration and totally unexpected results.
+    const newFd = [ ...fd ];
+
     fd.map(a => { // scaning "layout" element
       if (a.type == 'layout') {
         a.elements = a.elements.map(b=> {
           if(b.type === 'page') { // find page element
             b.pages.map(c => {
               // set elements to every page
-              c.elements = c.elements.map(d => getElementFromFields(d.name, fd))
+              c.elements = c.elements.map(d => getElementFromFields(d.name, newFd))
               return c;
             })
             return b;
           } else {
             // set elements to base SATGE
-            return getElementFromFields(b.name, fd);
+            return getElementFromFields(b.name, newFd);
           }
         });
-      } 
+      }
+
+      if (a.type === 'table' && a.cells && a.cells.length) {
+        a.cells.forEach(cell => {
+          cell.elements = cell.elements.map((d) => getElementFromFields(d.name, newFd));
+        });
+      }
+
       return a
     });
-    return fd;
+
+    return newFd;
   }
   // Parse saved XML template data
   const loadFields = function(formData) {
@@ -280,7 +297,10 @@ const FormBuilder = function(opts, element) {
       formData = jsonFormatter(formData)[0].elements;
       formData.forEach(fieldData => {
         $activeStage = $stage;
-        prepFieldVars(trimObj(fieldData));
+
+        // Current element container
+        const $li = prepFieldVars(trimObj(fieldData));
+
         if (fieldData.type == 'page') {
           $activeStage = $($('li.page-field ul.frmb')[$('li.page-field').length-1]);
           fieldData.pages.forEach(page => {
@@ -288,6 +308,19 @@ const FormBuilder = function(opts, element) {
               prepFieldVars(trimObj(field));
             })
           })
+        }
+
+        if (fieldData.type === 'table') {
+          fieldData.cells.forEach(cell => {
+            cell.elements.forEach(field => {
+              // Append to specified cell
+              const key = `${cell.row}:${cell.column}`;
+
+              $activeStage = $(`[data-key="${key}"]`, $li);
+
+              prepFieldVars(trimObj(field));
+            })
+          });
         }
       })
       d.stage.classList.remove('empty')
@@ -393,6 +426,7 @@ const FormBuilder = function(opts, element) {
         'other',
         'options',
       ],
+      table: defaultAttrs.concat(['rowsCount', 'columnsCount', 'bordered']),
       currency: defaultAttrs.concat(['currencyValue']),
       text: defaultAttrs.concat(['subtype', 'maxlength']),
       date: defaultAttrs,
@@ -459,6 +493,12 @@ const FormBuilder = function(opts, element) {
       style: () => btnStyles(values.style),
       placeholder: () => textAttribute('placeholder', values),
       rows: () => numberAttribute('rows', values),
+      columnsCount: () => numberAttribute('columnsCount', { columnsCount: values.columnsCount || 1 }),
+      rowsCount: () => numberAttribute('rowsCount', { rowsCount: values.rowsCount || 1 }),
+      bordered: () => boolAttribute('bordered',
+        { bordered: values.bordered },
+        { first: 'Bordered' },
+      ),
       className: isHidden => textAttribute('className', values, isHidden),
       name: isHidden => textAttribute('name', values, isHidden),
       value: () => textAttribute('value', values),
@@ -1069,6 +1109,9 @@ const FormBuilder = function(opts, element) {
         data.lastID = h.incrementId(data.lastID);
 
         setTimeout(() => updateForFields());
+
+    // Return element to be able to use it as a container for children
+    return $li;
   };
 
   // Select field html, since there may be multiple

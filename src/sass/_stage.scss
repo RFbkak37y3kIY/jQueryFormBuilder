@@ -319,6 +319,35 @@
       padding: 2px;
       display: inline-block;
     }
+
+    .table {
+      .table-row {
+        min-height: 40px;
+      }
+
+      .table-cell {
+        padding: 0;
+        min-height: 0;
+      }
+
+      &.bordered {
+        .table-row {
+          border-bottom: 1px solid #ccc;
+
+          &:first-child {
+            border-top: 1px solid #ccc;
+          }
+        }
+
+        .table-cell {
+          border-right: 1px solid #ccc;
+
+          &:first-child {
+            border-left: 1px solid #ccc;
+          }
+        }
+      }
+    }
   }
 
   .required-asterisk {

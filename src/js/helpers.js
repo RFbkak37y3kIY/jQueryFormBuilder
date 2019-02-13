@@ -260,6 +260,36 @@ export default class Helpers {
                     return;
                 }
 
+                if (fieldData.type === 'table') {
+                  const cells = $('.table-cell', $field);
+
+                  if (cells.length) {
+                    fieldData.cells = [];
+
+                    forEach(cells, (index, cell) => {
+                      const cellKey = $(cell).data('key');
+                      const keyMatch = cellKey.split(':');
+                      const row = keyMatch[0];
+                      const column = keyMatch[1];
+
+                      const innerData = _this.prepDataHelp(cell);
+                      const childElements = innerData.formData;
+
+                      console.log(childElements);
+
+                      if (childElements.length) {
+                        preparedData.formData = preparedData.formData.concat(childElements);
+
+                        fieldData.cells.push({
+                          row,
+                          column,
+                          elements: childElements.map(e => ({ name: e.name }))
+                        });
+                      }
+                    })
+                  }
+                }
+
                 preparedData.formData.push(fieldData)
                 preparedData.layout.elements.push({ name: fieldData.name})
             })
