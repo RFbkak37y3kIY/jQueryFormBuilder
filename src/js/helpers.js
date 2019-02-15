@@ -397,7 +397,7 @@ export default class Helpers {
    */
   getAttrVals(field) {
     const fieldData = Object.create(null)
-    const attrs = field.querySelectorAll('[class*="fld-"]')
+    const attrs = field.querySelectorAll(`#${field.id}-holder [class*="fld-"]`)
     forEach(attrs, index => {
       const attr = attrs[index]
       const name = camelCase(attr.getAttribute('name'))
